@@ -23,8 +23,8 @@ public class BoidManager : MonoBehaviour
     {
         for (int i = 0; i < _boids.Length; ++i)
         {
-            Bound(_boids[i]);
             SimulateBoid(_boids[i]);
+            Bound(_boids[i]);
         }
     }
 
@@ -42,6 +42,8 @@ public class BoidManager : MonoBehaviour
 
     private void SimulateForces(Boid boid, List<Boid> nearbyBoids)
     {
+        if (nearbyBoids.Count == 0) return;
+        
         Vector3 separationForce = Vector3.zero;
         Vector3 alignmentForce = Vector3.zero;
         Vector3 cohesionForce = Vector3.zero;
@@ -57,9 +59,16 @@ public class BoidManager : MonoBehaviour
             if (boidSettings.cohesion)
                 cohesionForce += GetCohesionForce(boid, nearbyBoids[i]);
         }
+        // Divide the cohesion force by the number of nearby boids
+        Vector2 offsetCohesion = Vector2.zero;
+        if (boidSettings.cohesion)
+        {
+            cohesionForce /= nearbyBoids.Count;
+            offsetCohesion = cohesionForce - boid.transform.position;
+        }
         boid.SetSeparation(separationForce);
         boid.SetAlignment(alignmentForce);
-        boid.SetCohesion(cohesionForce);
+        boid.SetCohesion(offsetCohesion);
     }
 
     private Vector3 GetSeparationForce(Boid boid1, Boid boid2)
@@ -73,6 +82,7 @@ public class BoidManager : MonoBehaviour
 
     private Vector3 GetAlignmentForce(Boid boid1, Boid boid2)
     {
+        return boid2.Direction;
         // Get the ratio between the relative distances
         Vector3 difference = boid2.transform.position - boid1.transform.position;
         float ratio = Mathf.Clamp01(difference.magnitude / boidSettings.visionRadius);
@@ -82,7 +92,7 @@ public class BoidManager : MonoBehaviour
 
     private Vector3 GetCohesionForce(Boid boid1, Boid boid2)
     {
-        return Vector3.zero;
+        return boid2.transform.position;
     }
     
     private List<Boid> GetNearbyBoids(Boid boid)

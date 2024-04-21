@@ -12,7 +12,7 @@ public static class GizmosExtensions
     /// <param name="maxSteps">How many steps to use to draw the arc.</param>
     public static void DrawWireArc(Vector3 position, Vector3 dir, float anglesRange, float radius, float maxSteps = 20)
     {
-        float srcAngles = GetAnglesFromDir(position, dir);
+        float srcAngles = BoidExtensions.GetAngle(dir);
         Vector3 initialPos = position;
         Vector3 posA = initialPos;
         float stepAngles = anglesRange / maxSteps;
@@ -29,14 +29,5 @@ public static class GizmosExtensions
             posA = posB;
         }
         Gizmos.DrawLine(posA, initialPos);
-    }
-
-    private static float GetAnglesFromDir(Vector3 position, Vector3 dir)
-    {
-        return BoidExtensions.GetAngle(dir);
-        Vector3 forwardLimitPos = position + dir;
-        float srcAngles = Mathf.Rad2Deg * Mathf.Atan2(forwardLimitPos.z - position.z, forwardLimitPos.x - position.x);
-
-        return srcAngles;
     }
 }

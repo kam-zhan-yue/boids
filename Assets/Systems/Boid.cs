@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Boid : MonoBehaviour
 {
@@ -19,7 +20,8 @@ public class Boid : MonoBehaviour
 
     public void Init(BoidSettings settings)
     {
-        _velocity = settings.minSpeed * Vector2.up;
+        Vector2 random = Random.insideUnitCircle;
+        _velocity = settings.minSpeed * random.normalized;
         _visionRadius = settings.visionRadius;
         _visionAngle = settings.visionAngle;
         _settings = settings;
@@ -38,9 +40,10 @@ public class Boid : MonoBehaviour
             Vector2 separationForce = SteerTowards(_separationForce);
             Vector2 alignmentForce = SteerTowards(_alignmentForce);
             Vector2 cohesionForce = SteerTowards(_cohesionForce);
-            acceleration += separationForce;
-            acceleration += alignmentForce;
-            acceleration += cohesionForce;
+            acceleration += separationForce * _settings.separationWeight;
+            acceleration += alignmentForce * _settings.alignmentWeight;
+            acceleration += cohesionForce * _settings.cohesionWeight;
+            Debug.Log($"Separation: {separationForce} Alignment: {alignmentForce} Cohesion: {cohesionForce}");
         }
 
         // Update the velocity by all forces
@@ -107,18 +110,30 @@ public class Boid : MonoBehaviour
         return Vector2.ClampMagnitude (velocity, _settings.maxSteerForce);
     }
 
-    private void OnDrawGizmos()
+    private void OnDrawGizmosSelected()
     {
+        // Debugging the velocity
         Gizmos.color = Color.red;
         Gizmos.DrawLine(transform.position, ((Vector2)transform.position + _velocity));
         
+        // Debugging the cone of vision
         Gizmos.color = Color.magenta;
         GizmosExtensions.DrawWireArc(transform.position, _velocity, _visionAngle, _visionRadius);
-        
-        Gizmos.color = Color.yellow;
-        for (int i = 0; i < _boidsInVision.Count; ++i)
+
+        if (_perceivedBoids > 0)
         {
-            Gizmos.DrawLine(transform.position, _boidsInVision[i].transform.position);
+            // Debugging nearby boids
+            // Gizmos.color = Color.yellow;
+            // for (int i = 0; i < _boidsInVision.Count; ++i)
+            // {
+            //     Gizmos.DrawLine(transform.position, _boidsInVision[i].transform.position);
+            // }
+
+            // Debugging the cohesion force
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawLine(transform.position, transform.position + _cohesionForce);
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(transform.position, transform.position + _separationForce);
         }
     }
 }

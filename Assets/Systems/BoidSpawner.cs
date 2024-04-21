@@ -14,7 +14,7 @@ public class BoidSpawner : MonoBehaviour
     {
         for (int i = 0; i < spawnCount; ++i)
         {
-            Vector2 randomPoint = Random.insideUnitCircle * spawnRadius;
+            Vector2 randomPoint = (Vector2)transform.position + Random.insideUnitCircle * spawnRadius;
             Boid boid = Instantiate(boidPrefab);
             boid.transform.SetPositionAndRotation(randomPoint, Quaternion.identity);
         }

@@ -15,6 +15,10 @@ public class BoidSettings : ScriptableObject
     public float width;
     public float height;
 
+    [Range(0f, 3f)] public float separationWeight = 1f;
+    [Range(0f, 3f)] public float alignmentWeight = 1f;
+    [Range(0f, 3f)] public float cohesionWeight = 1f;
+
     public bool separation = true;
     public bool alignment = true;
     public bool cohesion = true;
