@@ -31,25 +31,52 @@ public class BoidManager : MonoBehaviour
     private void SimulateBoid(Boid boid)
     {
         // Get all nearby boids
-        // Check which boid can be seen
-        // Separation
-        // Alignment
-        // Cohesion
         List<Boid> nearbyBoids = GetNearbyBoids(boid);
+        boid.SetPerceivedBoids(nearbyBoids.Count);
         boid.DebugVision(nearbyBoids);
+        // Apply separation force
+        if(boidSettings.separation) SimulateSeparation(boid, nearbyBoids);
+        // Apply alignment force
+        if(boidSettings.alignment) SimulateAlignment(boid, nearbyBoids);
+        // Apply cohesion force
+        if(boidSettings.cohesion) SimulateCohesion(boid, nearbyBoids);
+        // Simulate the boid
         boid.Simulate();
     }
 
+    private void SimulateSeparation(Boid boid, List<Boid> nearbyBoids)
+    {
+        Vector3 separationForce = Vector3.zero;
+        for (int i = 0; i < nearbyBoids.Count; ++i)
+        {
+            Vector3 difference = nearbyBoids[i].transform.position - boid.transform.position;
+            // Calculate a ratio based on relative distance in regards to the vision radius
+            float ratio = Mathf.Clamp01(difference.magnitude / boidSettings.visionRadius);
+            separationForce -= ratio * difference;
+        }
+        boid.SetSeparation(separationForce);
+    }
+
+    private void SimulateAlignment(Boid boid, List<Boid> nearbyBoids)
+    {
+        
+    }
+
+    private void SimulateCohesion(Boid boid, List<Boid> nearbyBoids)
+    {
+        
+    }
+    
     private List<Boid> GetNearbyBoids(Boid boid)
     {
         List<Boid> nearby = new List<Boid>();
-        Vector3 boidPosition = boid.transform.position;
         for (int i = 0; i < _boids.Length; ++i)
         {
             if (_boids[i] == boid)
                 continue;
             if (boid.CanSee(_boids[i].transform.position))
             {
+                // Add separation force
                 nearby.Add(_boids[i]);
             }
         }

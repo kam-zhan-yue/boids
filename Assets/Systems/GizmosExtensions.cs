@@ -21,7 +21,7 @@ public static class GizmosExtensions
         {
             float rad = Mathf.Deg2Rad * angle;
             Vector3 posB = initialPos;
-            posB += new Vector3(radius * Mathf.Sin(rad), radius * Mathf.Cos(rad), 0f);
+            posB += new Vector3(radius * Mathf.Cos(rad), radius * Mathf.Sin(rad), 0f);
 
             Gizmos.DrawLine(posA, posB);
 
