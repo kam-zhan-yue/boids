@@ -15,10 +15,11 @@ public class Boid : MonoBehaviour
     private Vector3 _separationForce = Vector3.zero;
     private Vector3 _alignmentForce = Vector3.zero;
     private Vector3 _cohesionForce = Vector3.zero;
+    public Vector3 Direction => _velocity.normalized;
 
     public void Init(BoidSettings settings)
     {
-        _velocity = settings.minSpeed * Vector2.down;
+        _velocity = settings.minSpeed * Vector2.up;
         _visionRadius = settings.visionRadius;
         _visionAngle = settings.visionAngle;
         _settings = settings;
@@ -77,7 +78,6 @@ public class Boid : MonoBehaviour
         // If the size of the vision angle is not a reflex angle, check within the angle bounds
         // If the angle is a reflex angle, check if it is NOT within the angle bounds
         bool inBounds = angleToPosition > minAngle && angleToPosition < maxAngle;
-        Debug.Log($"Angle: {angleToPosition} Min: {minAngle} Max: {maxAngle} InBounds: {inBounds}");
         return _visionAngle <= 180f ? inBounds : !inBounds;
     }
 

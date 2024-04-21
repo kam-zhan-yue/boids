@@ -34,37 +34,55 @@ public class BoidManager : MonoBehaviour
         List<Boid> nearbyBoids = GetNearbyBoids(boid);
         boid.SetPerceivedBoids(nearbyBoids.Count);
         boid.DebugVision(nearbyBoids);
-        // Apply separation force
-        if(boidSettings.separation) SimulateSeparation(boid, nearbyBoids);
-        // Apply alignment force
-        if(boidSettings.alignment) SimulateAlignment(boid, nearbyBoids);
-        // Apply cohesion force
-        if(boidSettings.cohesion) SimulateCohesion(boid, nearbyBoids);
+        // Apply forces
+        SimulateForces(boid, nearbyBoids);
         // Simulate the boid
         boid.Simulate();
     }
 
-    private void SimulateSeparation(Boid boid, List<Boid> nearbyBoids)
+    private void SimulateForces(Boid boid, List<Boid> nearbyBoids)
     {
         Vector3 separationForce = Vector3.zero;
+        Vector3 alignmentForce = Vector3.zero;
+        Vector3 cohesionForce = Vector3.zero;
         for (int i = 0; i < nearbyBoids.Count; ++i)
         {
-            Vector3 difference = nearbyBoids[i].transform.position - boid.transform.position;
-            // Calculate a ratio based on relative distance in regards to the vision radius
-            float ratio = Mathf.Clamp01(difference.magnitude / boidSettings.visionRadius);
-            separationForce -= ratio * difference;
+            if (boid == nearbyBoids[i])
+                continue;
+
+            if (boidSettings.separation)
+                separationForce -= GetSeparationForce(boid, nearbyBoids[i]);
+            if (boidSettings.alignment)
+                alignmentForce += GetAlignmentForce(boid, nearbyBoids[i]);
+            if (boidSettings.cohesion)
+                cohesionForce += GetCohesionForce(boid, nearbyBoids[i]);
         }
         boid.SetSeparation(separationForce);
+        boid.SetAlignment(alignmentForce);
+        boid.SetCohesion(cohesionForce);
     }
 
-    private void SimulateAlignment(Boid boid, List<Boid> nearbyBoids)
+    private Vector3 GetSeparationForce(Boid boid1, Boid boid2)
     {
-        
+        // Get the difference between boid1 and boid2
+        Vector3 difference = boid2.transform.position - boid1.transform.position;
+        // Calculate a ratio based on relative distance in regards to the vision radius
+        float ratio = Mathf.Clamp01(difference.magnitude / boidSettings.visionRadius); 
+        return ratio * difference;
     }
 
-    private void SimulateCohesion(Boid boid, List<Boid> nearbyBoids)
+    private Vector3 GetAlignmentForce(Boid boid1, Boid boid2)
     {
-        
+        // Get the ratio between the relative distances
+        Vector3 difference = boid2.transform.position - boid1.transform.position;
+        float ratio = Mathf.Clamp01(difference.magnitude / boidSettings.visionRadius);
+        // Return the direction of the second boid adjusted by the ratio
+        return ratio * boid2.Direction;
+    }
+
+    private Vector3 GetCohesionForce(Boid boid1, Boid boid2)
+    {
+        return Vector3.zero;
     }
     
     private List<Boid> GetNearbyBoids(Boid boid)
