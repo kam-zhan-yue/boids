@@ -4,12 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class Boid : MonoBehaviour
+public abstract class Boid : MonoBehaviour
 {
     private Vector3 _acceleration;
-    private Vector2 _velocity = Vector2.left;
-    private float _visionRadius;
-    private float _visionAngle;
+    private Vector3 _velocity = Vector2.left;
     private List<Boid> _boidsInVision = new List<Boid>();
     private BoidSettings _settings;
     private int _perceivedBoids = 0;
@@ -20,10 +18,8 @@ public class Boid : MonoBehaviour
     
     public void Init(BoidSettings settings)
     {
-        Vector2 random = Random.insideUnitCircle;
+        Vector3 random = Random.insideUnitCircle;
         _velocity = settings.minSpeed * random.normalized;
-        _visionRadius = settings.visionRadius;
-        _visionAngle = settings.visionAngle;
         _settings = settings;
     }
 
@@ -34,19 +30,23 @@ public class Boid : MonoBehaviour
 
     public void Simulate()
     {
-        Vector2 acceleration = Vector2.zero;
+        Vector3 acceleration = Vector3.zero;
         
         // Apply all forces
-        Vector2 separationForce = SteerTowards(_separationForce);
-        Vector2 alignmentForce = SteerTowards(_alignmentForce);
-        Vector2 cohesionForce = SteerTowards(_cohesionForce);
+        Vector3 separationForce = SteerTowards(_separationForce);
+        Vector3 alignmentForce = SteerTowards(_alignmentForce);
+        Vector3 cohesionForce = SteerTowards(_cohesionForce);
         acceleration += separationForce * _settings.separationWeight;
         acceleration += alignmentForce * _settings.alignmentWeight;
         acceleration += cohesionForce * _settings.cohesionWeight;
 
+        // Apply obstacle avoidance
+        Vector3 obstacleForce = SteerTowards(GetObstacleForce());
+        acceleration += obstacleForce * _settings.obstacleWeight;
+        
         // Update the velocity by all forces
         _velocity += acceleration * Time.deltaTime;
-        
+
         // Clamp the velocity to a min and max speed
         float speed = _velocity.magnitude;
         Vector3 direction = _velocity.normalized;
@@ -61,7 +61,7 @@ public class Boid : MonoBehaviour
     {
         Vector3 difference = position - transform.position;
         // If too far away, then cannot see
-        if (difference.magnitude > _visionRadius)
+        if (difference.magnitude > _settings.visionRadius)
             return false;
         
         // Get the angle to the position
@@ -69,8 +69,8 @@ public class Boid : MonoBehaviour
         
         // Get the angles of the bounds of the cone
         float vision = BoidExtensions.GetAngle(_velocity);
-        float angle1 = BoidExtensions.AddAngle(vision, _visionAngle * -0.5f);
-        float angle2 = BoidExtensions.AddAngle(vision, _visionAngle * 0.5f);
+        float angle1 = BoidExtensions.AddAngle(vision, _settings.visionAngle * -0.5f);
+        float angle2 = BoidExtensions.AddAngle(vision, _settings.visionAngle * 0.5f);
         
         // Set the min and max angles
         float minAngle = angle1 > angle2 ? angle2 : angle1;
@@ -79,7 +79,22 @@ public class Boid : MonoBehaviour
         // If the size of the vision angle is not a reflex angle, check within the angle bounds
         // If the angle is a reflex angle, check if it is NOT within the angle bounds
         bool inBounds = angleToPosition > minAngle && angleToPosition < maxAngle;
-        return _visionAngle <= 180f ? inBounds : !inBounds;
+        return _settings.visionAngle <= 180f ? inBounds : !inBounds;
+    }
+
+    private Vector3 GetObstacleForce()
+    {
+        Vector3 obstacleForce = Vector3.zero;
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, _settings.visionRadius, _settings.obstacleLayer);
+        for (int i = 0; i < colliders.Length; ++i)
+        {
+            Vector3 difference = colliders[i].transform.position - transform.position;
+            obstacleForce -= difference.normalized / difference.sqrMagnitude;
+            // obstacleForce -= BoidExtensions.GetAttractiveForce(transform.position, colliders[i].transform.position,
+            //     _settings.visionRadius);
+        }
+
+        return obstacleForce;
     }
 
     public void SetPerceivedBoids(int perceivedBoids)
@@ -102,21 +117,21 @@ public class Boid : MonoBehaviour
         _cohesionForce = separation;
     }
     
-    private Vector2 SteerTowards(Vector2 vector)
+    private Vector3 SteerTowards(Vector3 vector)
     {
-        Vector2 velocity = vector.normalized * _settings.maxSpeed - _velocity;
-        return Vector2.ClampMagnitude (velocity, _settings.maxSteerForce);
+        Vector3 velocity = vector.normalized * _settings.maxSpeed - _velocity;
+        return Vector3.ClampMagnitude (velocity, _settings.maxSteerForce);
     }
 
     private void OnDrawGizmosSelected()
     {
         // Debugging the velocity
         Gizmos.color = Color.red;
-        Gizmos.DrawLine(transform.position, ((Vector2)transform.position + _velocity));
+        Gizmos.DrawLine(transform.position, transform.position + _velocity);
         
         // Debugging the cone of vision
         Gizmos.color = Color.magenta;
-        GizmosExtensions.DrawWireArc(transform.position, _velocity, _visionAngle, _visionRadius);
+        GizmosExtensions.DrawWireArc(transform.position, _velocity, _settings.visionAngle, _settings.visionRadius);
 
         if (_perceivedBoids > 0)
         {

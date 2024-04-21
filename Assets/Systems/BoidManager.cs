@@ -73,21 +73,15 @@ public class BoidManager : MonoBehaviour
 
     private Vector3 GetSeparationForce(Boid boid1, Boid boid2)
     {
-        // Get the difference between boid1 and boid2
-        Vector3 difference = boid2.transform.position - boid1.transform.position;
-        // Calculate a ratio based on relative distance in regards to the vision radius
-        float ratio = Mathf.Clamp01(difference.magnitude / boidSettings.visionRadius); 
-        return ratio * difference;
+        return BoidExtensions.GetAttractiveForce(
+            boid1.transform.position, 
+            boid2.transform.position, 
+            boidSettings.visionRadius);
     }
 
     private Vector3 GetAlignmentForce(Boid boid1, Boid boid2)
     {
         return boid2.Direction;
-        // Get the ratio between the relative distances
-        Vector3 difference = boid2.transform.position - boid1.transform.position;
-        float ratio = Mathf.Clamp01(difference.magnitude / boidSettings.visionRadius);
-        // Return the direction of the second boid adjusted by the ratio
-        return ratio * boid2.Direction;
     }
 
     private Vector3 GetCohesionForce(Boid boid1, Boid boid2)

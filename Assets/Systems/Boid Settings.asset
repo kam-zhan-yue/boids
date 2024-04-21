@@ -12,16 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60ee3900e8f3842318959c1ad031cfb1, type: 3}
   m_Name: Boid Settings
   m_EditorClassIdentifier: 
-  minSpeed: 4
+  minSpeed: 7
   maxSpeed: 10
   maxSteerForce: 10
-  visionRadius: 1.5
-  visionAngle: 30
+  visionRadius: 1.1
+  visionAngle: 195
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 64
   width: 20
   height: 20
-  separationWeight: 1.534
-  alignmentWeight: 1
+  separationWeight: 2.5
+  alignmentWeight: 2
   cohesionWeight: 1
+  obstacleWeight: 20
   separation: 1
   alignment: 1
   cohesion: 1
