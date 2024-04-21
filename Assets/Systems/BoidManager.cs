@@ -1,8 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using Cysharp.Threading.Tasks.Triggers;
-using TMPro;
 using UnityEngine;
 
 public class BoidManager : MonoBehaviour
@@ -110,15 +107,23 @@ public class BoidManager : MonoBehaviour
     {
         Vector3 boidPosition = boid.transform.position;
         Vector3 managerPosition = transform.position;
-        Bounds bounds = new Bounds(managerPosition, new Vector3(boidSettings.width, boidSettings.height, 0f));
+        Bounds bounds = new Bounds(managerPosition, new Vector3(boidSettings.width, boidSettings.height, boidSettings.depth));
+        
         if (boidPosition.x > bounds.max.x)
             boidPosition.x = bounds.min.x;
         else if (boidPosition.x < bounds.min.x)
             boidPosition.x = bounds.max.x;
-        else if (boidPosition.y > bounds.max.y)
+        
+        if (boidPosition.y > bounds.max.y)
             boidPosition.y = bounds.min.y;
         else if (boidPosition.y < bounds.min.y)
             boidPosition.y = bounds.max.y;
+        
+        if (boidPosition.z < bounds.min.z)
+            boidPosition.z = bounds.max.z;
+        else if (boidPosition.z > bounds.max.z)
+            boidPosition.z = bounds.min.z;
+
         boid.transform.position = boidPosition;
     }
 
@@ -126,6 +131,6 @@ public class BoidManager : MonoBehaviour
     {
         if (boidSettings == null) return;
         Gizmos.color = Color.green;
-        Gizmos.DrawWireCube(transform.position, new Vector3(boidSettings.width, boidSettings.height, 0f));
+        Gizmos.DrawWireCube(transform.position, new Vector3(boidSettings.width, boidSettings.height, boidSettings.depth));
     }
 }

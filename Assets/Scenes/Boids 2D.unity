@@ -253,53 +253,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &385420721
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 385420723}
-  - component: {fileID: 385420722}
-  m_Layer: 0
-  m_Name: BoidSpawner
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &385420722
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 385420721}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4b20ad4344dac456183640f79762a118, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  boidPrefab: {fileID: 4245311644579194181, guid: 2457481d2a6df498d81bb26631f2a49d, type: 3}
-  spawnRadius: 5
-  spawnCount: 30
---- !u!4 &385420723
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 385420721}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 4.76, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &680857286
 GameObject:
   m_ObjectHideFlags: 0
@@ -633,7 +586,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   boidPrefab: {fileID: 4245311644579194181, guid: 2457481d2a6df498d81bb26631f2a49d, type: 3}
   spawnRadius: 5
-  spawnCount: 30
+  spawnCount: 50
 --- !u!4 &1161395710
 Transform:
   m_ObjectHideFlags: 0
@@ -643,7 +596,7 @@ Transform:
   m_GameObject: {fileID: 1161395708}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.07, y: -4.81, z: 0}
+  m_LocalPosition: {x: -1.86, y: 3.05, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -810,7 +763,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   boidPrefab: {fileID: 4245311644579194181, guid: 2457481d2a6df498d81bb26631f2a49d, type: 3}
   spawnRadius: 5
-  spawnCount: 30
+  spawnCount: 50
 --- !u!4 &1226047205
 Transform:
   m_ObjectHideFlags: 0
@@ -820,7 +773,7 @@ Transform:
   m_GameObject: {fileID: 1226047203}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.76, y: -4.29, z: 0}
+  m_LocalPosition: {x: 4.99, y: -4.57, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1205,7 +1158,6 @@ SceneRoots:
   - {fileID: 1148193725}
   - {fileID: 1950803047}
   - {fileID: 918632547}
-  - {fileID: 385420723}
   - {fileID: 1226047205}
   - {fileID: 1161395710}
   - {fileID: 2030407617}
