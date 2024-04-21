@@ -9,7 +9,7 @@ public class BoidManager : MonoBehaviour
 {
     [SerializeField] private BoidSettings boidSettings;
     private Boid[] _boids = Array.Empty<Boid>();
-
+    
     private void Start()
     {
         _boids = FindObjectsOfType<Boid>();

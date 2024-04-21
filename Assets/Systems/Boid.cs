@@ -17,7 +17,7 @@ public class Boid : MonoBehaviour
     private Vector3 _alignmentForce = Vector3.zero;
     private Vector3 _cohesionForce = Vector3.zero;
     public Vector3 Direction => _velocity.normalized;
-
+    
     public void Init(BoidSettings settings)
     {
         Vector2 random = Random.insideUnitCircle;
@@ -35,16 +35,14 @@ public class Boid : MonoBehaviour
     public void Simulate()
     {
         Vector2 acceleration = Vector2.zero;
-        if (_perceivedBoids > 0)
-        {
-            Vector2 separationForce = SteerTowards(_separationForce);
-            Vector2 alignmentForce = SteerTowards(_alignmentForce);
-            Vector2 cohesionForce = SteerTowards(_cohesionForce);
-            acceleration += separationForce * _settings.separationWeight;
-            acceleration += alignmentForce * _settings.alignmentWeight;
-            acceleration += cohesionForce * _settings.cohesionWeight;
-            Debug.Log($"Separation: {separationForce} Alignment: {alignmentForce} Cohesion: {cohesionForce}");
-        }
+        
+        // Apply all forces
+        Vector2 separationForce = SteerTowards(_separationForce);
+        Vector2 alignmentForce = SteerTowards(_alignmentForce);
+        Vector2 cohesionForce = SteerTowards(_cohesionForce);
+        acceleration += separationForce * _settings.separationWeight;
+        acceleration += alignmentForce * _settings.alignmentWeight;
+        acceleration += cohesionForce * _settings.cohesionWeight;
 
         // Update the velocity by all forces
         _velocity += acceleration * Time.deltaTime;
@@ -123,11 +121,11 @@ public class Boid : MonoBehaviour
         if (_perceivedBoids > 0)
         {
             // Debugging nearby boids
-            // Gizmos.color = Color.yellow;
-            // for (int i = 0; i < _boidsInVision.Count; ++i)
-            // {
-            //     Gizmos.DrawLine(transform.position, _boidsInVision[i].transform.position);
-            // }
+            Gizmos.color = Color.yellow;
+            for (int i = 0; i < _boidsInVision.Count; ++i)
+            {
+                Gizmos.DrawLine(transform.position, _boidsInVision[i].transform.position);
+            }
 
             // Debugging the cohesion force
             Gizmos.color = Color.cyan;
