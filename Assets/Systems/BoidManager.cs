@@ -57,7 +57,7 @@ public class BoidManager : MonoBehaviour
                 cohesionForce += GetCohesionForce(boid, nearbyBoids[i]);
         }
         // Divide the cohesion force by the number of nearby boids
-        Vector2 offsetCohesion = Vector2.zero;
+        Vector3 offsetCohesion = Vector3.zero;
         if (boidSettings.cohesion)
         {
             cohesionForce /= nearbyBoids.Count;

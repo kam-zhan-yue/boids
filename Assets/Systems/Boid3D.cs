@@ -17,7 +17,9 @@ public class Boid3D : Boid
 
     public override bool CanSee(Vector3 position)
     {
-        return false;
+        // Just away if they are close by (no vision angle, just sphere)
+        Vector3 difference = position - transform.position;
+        return difference.magnitude <= settings.visionRadius;
     }
 
     protected override Vector3 GetObstacleForce()
