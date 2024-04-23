@@ -3,8 +3,22 @@ using UnityEngine;
 
 public class Boid2D : Boid
 {
+    private SpriteRenderer _spriteRenderer;
     private const int MAX_STEPS = 20;
     private Vector3[] _debugRays = new Vector3[MAX_STEPS];
+
+    private void Awake()
+    {
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+    }
+
+    public override void InitGroup(BoidGroup boidGroup)
+    {
+        base.InitGroup(boidGroup);
+        if(boidGroup)
+            _spriteRenderer.color = boidGroup.color;
+    }
+
     protected override void InitVelocity(float speed)
     {
         Vector2 random = Random.insideUnitCircle;
@@ -69,7 +83,6 @@ public class Boid2D : Boid
         float angle = initialAngle - settings.visionAngle * 0.5f;
         for (int i = 0; i < MAX_STEPS; ++i)
         {
-            Debug.Log(angle);
             float rad = Mathf.Deg2Rad * angle;
             Vector3 rayDirection = new Vector3(settings.obstacleVisionRadius * Mathf.Cos(rad), settings.obstacleVisionRadius * Mathf.Sin(rad), 0f);
             _debugRays[i] = rayDirection + initialPosition;

@@ -13,7 +13,15 @@ public abstract class Boid : MonoBehaviour
     private List<Boid> _boidsInVision = new List<Boid>();
     private int _perceivedBoids;
     public Vector3 Direction => velocity.normalized;
-    
+    public int GroupID => _groupID;
+    private int _groupID;
+
+    public virtual void InitGroup(BoidGroup boidGroup)
+    {
+        if(boidGroup)
+            _groupID = boidGroup.name.GetHashCode();
+    }
+
     public void Init(BoidSettings boidSettings)
     {
         settings = boidSettings;

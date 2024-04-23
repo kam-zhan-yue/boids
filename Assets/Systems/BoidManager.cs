@@ -71,6 +71,8 @@ public class BoidManager : MonoBehaviour
 
     private Vector3 GetSeparationForce(Boid boid1, Boid boid2)
     {
+        Vector3 difference = boid2.transform.position - boid1.transform.position;
+        return difference.normalized / difference.sqrMagnitude;
         return BoidExtensions.GetAttractiveForce(
             boid1.transform.position, 
             boid2.transform.position, 
@@ -91,8 +93,10 @@ public class BoidManager : MonoBehaviour
     {
         List<Boid> nearby = new List<Boid>();
         for (int i = 0; i < _boids.Length; ++i)
-        {
+        {   
             if (_boids[i] == boid)
+                continue;
+            if(_boids[i].GroupID != boid.GroupID)
                 continue;
             if (boid.CanSee(_boids[i].transform.position))
             {

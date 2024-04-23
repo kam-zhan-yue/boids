@@ -10,6 +10,7 @@ public class BoidSpawner : MonoBehaviour
     [SerializeField] private Boid boidPrefab;
     [SerializeField] private float spawnRadius = 1;
     [SerializeField] private float spawnCount = 1;
+    [SerializeField] private BoidGroup boidGroup;
 
     private void Awake()
     {
@@ -25,6 +26,7 @@ public class BoidSpawner : MonoBehaviour
                 randomPoint = (Vector2)transform.position + Random.insideUnitCircle * spawnRadius;
             }
             Boid boid = Instantiate(boidPrefab);
+            boid.InitGroup(boidGroup);
             boid.transform.SetPositionAndRotation(randomPoint, Quaternion.identity);
         }
     }
