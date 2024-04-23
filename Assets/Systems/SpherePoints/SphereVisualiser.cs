@@ -52,19 +52,8 @@ public class SphereVisualiser : MonoBehaviour
 
     private void CalculateDirections()
     {
-        float angleIncrement = Mathf.PI * 2 * ratio;
-
         _directions = new Vector3[directions];
-        for (int i = 0; i < directions; i++) {
-            float t = (float) i / directions;
-            float inclination = Mathf.Acos (1 - 2 * t);
-            float azimuth = angleIncrement * i;
-
-            float x = Mathf.Sin (inclination) * Mathf.Cos (azimuth);
-            float y = Mathf.Sin (inclination) * Mathf.Sin (azimuth);
-            float z = Mathf.Cos (inclination);
-            _directions[i] = new Vector3 (x, y, z);
-        }
+        BoidExtensions.CalculateSpherePoints(_directions, ratio);
     }
 
     private void SetDirections()

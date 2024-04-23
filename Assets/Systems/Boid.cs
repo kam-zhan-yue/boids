@@ -9,6 +9,7 @@ public abstract class Boid : MonoBehaviour
     private Vector3 _separationForce = Vector3.zero;
     private Vector3 _alignmentForce = Vector3.zero;
     private Vector3 _cohesionForce = Vector3.zero;
+    private Vector3 _obstacleForce = Vector3.zero;
     private List<Boid> _boidsInVision = new List<Boid>();
     private int _perceivedBoids;
     public Vector3 Direction => velocity.normalized;
@@ -16,7 +17,7 @@ public abstract class Boid : MonoBehaviour
     public void Init(BoidSettings boidSettings)
     {
         settings = boidSettings;
-        InitVelocity(settings.minSpeed);
+        InitVelocity((settings.minSpeed + settings.maxSpeed) * 0.5f);
     }
 
     protected abstract void InitVelocity(float speed);
@@ -39,11 +40,12 @@ public abstract class Boid : MonoBehaviour
         acceleration += cohesionForce * settings.cohesionWeight;
 
         // Apply obstacle avoidance
-        Vector3 obstacleForce = SteerTowards(GetObstacleForce());
-        acceleration += obstacleForce * settings.obstacleWeight;
+        _obstacleForce = SteerTowards(GetObstacleForce());
+        acceleration += _obstacleForce * settings.obstacleWeight;
         
         // Update the velocity by all forces
         velocity += acceleration * Time.deltaTime;
+
 
         // Clamp the velocity to a min and max speed
         float speed = velocity.magnitude;
@@ -83,16 +85,18 @@ public abstract class Boid : MonoBehaviour
     
     private Vector3 SteerTowards(Vector3 vector)
     {
+        if (vector == Vector3.zero)
+            return Vector3.zero;
         Vector3 v = vector.normalized * settings.maxSpeed - this.velocity;
         return Vector3.ClampMagnitude (v, settings.maxSteerForce);
     }
 
     private void OnDrawGizmosSelected()
     {
-        Debug();
+        DebugGizmos();
     }
 
-    protected virtual void Debug()
+    protected virtual void DebugGizmos()
     {
         // Debugging the velocity
         Gizmos.color = Color.red;
@@ -108,10 +112,12 @@ public abstract class Boid : MonoBehaviour
             }
 
             // Debugging the cohesion force
-            Gizmos.color = Color.cyan;
-            Gizmos.DrawLine(transform.position, transform.position + _cohesionForce);
-            Gizmos.color = Color.red;
-            Gizmos.DrawLine(transform.position, transform.position + _separationForce);
+            // Gizmos.color = Color.cyan;
+            // Gizmos.DrawLine(transform.position, transform.position + _cohesionForce);
+            // Gizmos.color = Color.red;
+            // Gizmos.DrawLine(transform.position, transform.position + _separationForce);\
         }
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawLine(transform.position, transform.position + _obstacleForce);
     }
 }

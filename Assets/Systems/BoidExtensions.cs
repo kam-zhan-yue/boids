@@ -8,19 +8,22 @@ public static class BoidExtensions
 
     static BoidExtensions () {
         Directions = new Vector3[NUM_VIEW_DIRECTIONS];
+        CalculateSpherePoints(Directions, GoldenRatio);
+    }
 
-        float goldenRatio = (1 + Mathf.Sqrt (5)) / 2;
-        float angleIncrement = Mathf.PI * 2 * goldenRatio;
+    public static void CalculateSpherePoints(Vector3[] directions, float ratio)
+    {
+        float angleIncrement = Mathf.PI * 2 * ratio;
 
-        for (int i = 0; i < NUM_VIEW_DIRECTIONS; i++) {
-            float t = (float) i / NUM_VIEW_DIRECTIONS;
+        for (int i = 0; i < directions.Length; ++i) {
+            float t = (float) i / directions.Length;
             float inclination = Mathf.Acos (1 - 2 * t);
             float azimuth = angleIncrement * i;
 
             float x = Mathf.Sin (inclination) * Mathf.Cos (azimuth);
             float y = Mathf.Sin (inclination) * Mathf.Sin (azimuth);
             float z = Mathf.Cos (inclination);
-            Directions[i] = new Vector3 (x, y, z);
+            directions[i] = new Vector3 (x, y, z);
         }
     }
     

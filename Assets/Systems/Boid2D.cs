@@ -1,7 +1,10 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Boid2D : Boid
 {
+    private const int MAX_STEPS = 20;
+    private Vector3[] _debugRays = new Vector3[MAX_STEPS];
     protected override void InitVelocity(float speed)
     {
         Vector2 random = Random.insideUnitCircle;
@@ -40,6 +43,7 @@ public class Boid2D : Boid
     
     protected override Vector3 GetObstacleForce()
     {
+        return HasCollision() ? GetObstacleRay() : Vector3.zero;
         Vector3 obstacleForce = Vector3.zero;
         Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, settings.visionRadius, settings.obstacleLayer);
         for (int i = 0; i < colliders.Length; ++i)
@@ -51,14 +55,53 @@ public class Boid2D : Boid
         return obstacleForce;
     }
 
-    protected override void Debug()
+    private bool HasCollision()
     {
-        base.Debug();
+        return Physics2D.OverlapCircle(transform.position, settings.obstacleVisionRadius, settings.obstacleLayer);
+    }
+
+    private Vector3 GetObstacleRay()
+    {
+        Vector3 obstacleRay = Vector3.zero;
+        Vector3 initialPosition = transform.position;
+        float initialAngle = BoidExtensions.GetAngle(velocity);
+        float stepAngles = settings.visionAngle / MAX_STEPS;
+        float angle = initialAngle - settings.visionAngle * 0.5f;
+        for (int i = 0; i < MAX_STEPS; ++i)
+        {
+            Debug.Log(angle);
+            float rad = Mathf.Deg2Rad * angle;
+            Vector3 rayDirection = new Vector3(settings.obstacleVisionRadius * Mathf.Cos(rad), settings.obstacleVisionRadius * Mathf.Sin(rad), 0f);
+            _debugRays[i] = rayDirection + initialPosition;
+            // Shoot a ray to the position
+            RaycastHit2D ray = Physics2D.Raycast(initialPosition, rayDirection, settings.obstacleVisionRadius, settings.obstacleLayer);
+            if (ray)
+            {
+                Vector3 raycast = rayDirection.normalized * ray.distance;
+                obstacleRay -= raycast.normalized / raycast.sqrMagnitude;
+            }
+            angle += stepAngles;
+        }
+
+        return obstacleRay;
+    }
+
+    protected override void DebugGizmos()
+    {
+        base.DebugGizmos();
         // Debugging the cone of vision
         if (settings)
         {
             Gizmos.color = Color.magenta;
             GizmosExtensions.DrawWireArc(transform.position, velocity, settings.visionAngle, settings.visionRadius);
+            Gizmos.color = Color.green;
+            if (HasCollision())
+            {
+                for (int i = 0; i < MAX_STEPS; ++i)
+                {
+                    Gizmos.DrawLine(transform.position, _debugRays[i]);
+                }
+            }
         }
     }
 }

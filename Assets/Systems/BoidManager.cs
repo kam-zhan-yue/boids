@@ -21,7 +21,8 @@ public class BoidManager : MonoBehaviour
         for (int i = 0; i < _boids.Length; ++i)
         {
             SimulateBoid(_boids[i]);
-            Bound(_boids[i]);
+            if(boidSettings.infinite) 
+                Bound(_boids[i]);
         }
     }
 

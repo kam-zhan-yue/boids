@@ -14,19 +14,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 7
   maxSpeed: 10
-  maxSteerForce: 10
-  visionRadius: 1.5
+  maxSteerForce: 50
+  obstacleVisionRadius: 0
+  visionRadius: 0.9
   visionAngle: 195
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 64
-  width: 20
+  infinite: 0
+  width: 50
   height: 20
   depth: 20
-  separationWeight: 2.5
-  alignmentWeight: 2
-  cohesionWeight: 1
+  separationWeight: 1.5
+  alignmentWeight: 1
+  cohesionWeight: 3
   obstacleWeight: 20
-  separation: 0
+  separation: 1
   alignment: 1
   cohesion: 1
