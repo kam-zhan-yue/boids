@@ -854,10 +854,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   threeDimensions: 0
-  startDirection: {x: 0, y: 0, z: 0}
+  startDirection: {x: 0, y: 1, z: 0}
   boidPrefab: {fileID: 4245311644579194181, guid: 2457481d2a6df498d81bb26631f2a49d, type: 3}
   spawnRadius: 3
-  spawnCount: 200
+  spawnCount: 290
   boidGroup: {fileID: 11400000, guid: 893a010b6ea0a4e45bb9f240b016413e, type: 2}
 --- !u!4 &1161395710
 Transform:
@@ -1034,10 +1034,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   threeDimensions: 0
-  startDirection: {x: 0, y: 0, z: 0}
+  startDirection: {x: 1, y: 0, z: 0}
   boidPrefab: {fileID: 4245311644579194181, guid: 2457481d2a6df498d81bb26631f2a49d, type: 3}
   spawnRadius: 3
-  spawnCount: 200
+  spawnCount: 290
   boidGroup: {fileID: 11400000, guid: a60ba9aa908c54f529dfe55c7eb1ab3c, type: 2}
 --- !u!4 &1226047205
 Transform:
@@ -1087,7 +1087,7 @@ MonoBehaviour:
   startDirection: {x: 1, y: 0, z: 0}
   boidPrefab: {fileID: 4245311644579194181, guid: 2457481d2a6df498d81bb26631f2a49d, type: 3}
   spawnRadius: 2
-  spawnCount: 10
+  spawnCount: 20
   boidGroup: {fileID: 11400000, guid: 9c1916472afdf441a92efa02d7551f54, type: 2}
 --- !u!4 &1298913437
 Transform:
