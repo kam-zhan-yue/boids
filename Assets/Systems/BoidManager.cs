@@ -32,11 +32,11 @@ public class BoidManager : MonoBehaviour
         _boidData = new BoidData[_boids.Length];
         for (int i = 0; i < _boids.Length; ++i)
         {
-            BoidData boidData = new BoidData
+            BoidData boidData = new()
             {
                 position = _boids[i].transform.position,
                 direction = _boids[i].Direction,
-                predator = _boids[i].Predator ? (byte)1 : (byte)0,
+                predator = _boids[i].Predator ? (uint)1:0,
                 groupId = _boids[i].GroupID
             };
             _boidData[i] = boidData;
@@ -62,6 +62,9 @@ public class BoidManager : MonoBehaviour
             _boids[i].SetAlignment(_boidData[i].alignmentForce);
             _boids[i].SetCohesion(_boidData[i].cohesionForce);
             _boids[i].SetAvoidance(_boidData[i].avoidanceForce);
+            _boids[i].Simulate();
+            if (boidSettings.infinite)
+                Bound(_boids[i]);
         }
     }
 

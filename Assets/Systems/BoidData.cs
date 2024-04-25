@@ -9,7 +9,7 @@ public struct BoidData
     public Vector3 cohesionForce;
     public Vector3 avoidanceForce;
     public int groupId;
-    public byte predator;
+    public uint predator;
 
     public static int GetStrideLength()
     {
@@ -20,7 +20,7 @@ public struct BoidData
         int cohesionSize = sizeof(float) * 3;
         int avoidanceSize = sizeof(float) * 3;
         int groupSize = sizeof(int);
-        int predatorSize = sizeof(byte);
+        int predatorSize = sizeof(uint);
         return positionSize + directionSize + separationSize + alignmentSize + cohesionSize + avoidanceSize + groupSize + predatorSize;
     }
 }

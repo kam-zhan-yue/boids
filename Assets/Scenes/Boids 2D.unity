@@ -1536,6 +1536,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boidSettings: {fileID: 11400000, guid: e09a6ff8e5b9a49968ba3f2a09c78f43, type: 2}
+  boidComputeShader: {fileID: 7200000, guid: 0971547b9971945c99f8f089d66b6c58, type: 3}
 --- !u!1 &2030407616
 GameObject:
   m_ObjectHideFlags: 0
