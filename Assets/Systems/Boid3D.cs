@@ -84,13 +84,13 @@ public class Boid3D : Boid
         base.DebugGizmos();
         if (settings)
         {
-            Gizmos.color = Color.magenta;
-            Vector3[] directions = BoidExtensions.Directions;
-            for (int i = 0; i < directions.Length; ++i)
-            {
-                Vector3 rayDirection = transform.TransformDirection(directions[i]);
-                Gizmos.DrawLine(transform.position, transform.position + rayDirection);
-            }
+            // Gizmos.color = Color.magenta;
+            // Vector3[] directions = BoidExtensions.Directions;
+            // for (int i = 0; i < directions.Length; ++i)
+            // {
+            //     Vector3 rayDirection = transform.TransformDirection(directions[i]);
+            //     Gizmos.DrawLine(transform.position, transform.position + rayDirection);
+            // }
         }
     }
 }

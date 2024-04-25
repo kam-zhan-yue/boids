@@ -13,23 +13,23 @@ MonoBehaviour:
   m_Name: Boid Settings 3D
   m_EditorClassIdentifier: 
   minSpeed: 7
-  maxSpeed: 10
+  maxSpeed: 8
   maxSteerForce: 50
   obstacleVisionRadius: 0.5
-  visionRadius: 2
+  visionRadius: 5
   visionAngle: 195
   obstacleLayer:
     serializedVersion: 2
-    m_Bits: 64
-  infinite: 1
+    m_Bits: 192
+  infinite: 0
   width: 50
   height: 20
   depth: 20
-  separationWeight: 1.5
+  separationWeight: 2
   alignmentWeight: 2
-  cohesionWeight: 2
-  obstacleWeight: 80
-  avoidanceWeight: 100
+  cohesionWeight: 4
+  obstacleWeight: 100
+  avoidanceWeight: 15
   separation: 1
   alignment: 1
   cohesion: 1

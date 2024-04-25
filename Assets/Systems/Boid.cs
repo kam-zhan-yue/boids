@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -11,8 +12,6 @@ public abstract class Boid : MonoBehaviour
     private Vector3 _cohesionForce = Vector3.zero;
     private Vector3 _obstacleForce = Vector3.zero;
     private Vector3 _avoidanceForce = Vector3.zero;
-    private List<Boid> _boidsInVision = new List<Boid>();
-    private int _perceivedBoids;
     private int _groupID;
     private bool _predator;
     public Vector3 Direction => velocity.normalized;
@@ -41,11 +40,6 @@ public abstract class Boid : MonoBehaviour
 
     protected abstract void InitVelocity(float speed);
 
-    public void DebugVision(List<Boid> visionBoids)
-    {
-        _boidsInVision = visionBoids;
-    }
-
     public void Simulate()
     {
         Vector3 acceleration = Vector3.zero;
@@ -66,8 +60,7 @@ public abstract class Boid : MonoBehaviour
         
         // Update the velocity by all forces
         velocity += acceleration * Time.deltaTime;
-
-
+        
         // Clamp the velocity to a min and max speed
         float speed = velocity.magnitude;
         Vector3 direction = velocity.normalized;
@@ -83,11 +76,6 @@ public abstract class Boid : MonoBehaviour
     public abstract bool CanSee(Vector3 position);
 
     protected abstract Vector3 GetObstacleForce();
-
-    public void SetPerceivedBoids(int perceivedBoids)
-    {
-        _perceivedBoids = perceivedBoids;
-    }
     
     public void SetSeparation(Vector2 separation)
     {
@@ -117,6 +105,15 @@ public abstract class Boid : MonoBehaviour
         return Vector3.ClampMagnitude (v, settings.maxSteerForce);
     }
 
+    [Button]
+    private void DebugForces()
+    {
+        Debug.Log($"Separation: {_separationForce}");
+        Debug.Log($"Alignment: {_alignmentForce}");
+        Debug.Log($"Cohesion: {_cohesionForce}");
+        Debug.Log($"Avoidance: {_avoidanceForce}");
+    }
+
     private void OnDrawGizmosSelected()
     {
         DebugGizmos();
@@ -128,21 +125,13 @@ public abstract class Boid : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawLine(transform.position, transform.position + velocity);
 
-        if (_perceivedBoids > 0)
-        {
-            // Debugging nearby boids
-            Gizmos.color = Color.yellow;
-            for (int i = 0; i < _boidsInVision.Count; ++i)
-            {
-                Gizmos.DrawLine(transform.position, _boidsInVision[i].transform.position);
-            }
-
-            // Debugging the cohesion force
-            // Gizmos.color = Color.cyan;
-            // Gizmos.DrawLine(transform.position, transform.position + _cohesionForce);
-            // Gizmos.color = Color.red;
-            // Gizmos.DrawLine(transform.position, transform.position + _separationForce);\
-        }
+        // Debugging Forces
+        Gizmos.color = Color.blue;
+        Gizmos.DrawLine(transform.position, transform.position + _cohesionForce);
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(transform.position, transform.position + _separationForce);
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawLine(transform.position, transform.position + _avoidanceForce);
         Gizmos.color = Color.cyan;
         Gizmos.DrawLine(transform.position, transform.position + _obstacleForce);
     }

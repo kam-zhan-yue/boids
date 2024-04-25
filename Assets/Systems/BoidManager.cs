@@ -30,8 +30,6 @@ public class BoidManager : MonoBehaviour
     {
         // Get all nearby boids
         List<Boid> nearbyBoids = GetNearbyBoids(boid);
-        boid.SetPerceivedBoids(nearbyBoids.Count);
-        boid.DebugVision(nearbyBoids);
         // Apply forces
         SimulateForces(boid, nearbyBoids);
         // Simulate the boid
