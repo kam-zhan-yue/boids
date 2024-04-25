@@ -15,20 +15,22 @@ MonoBehaviour:
   minSpeed: 7
   maxSpeed: 10
   maxSteerForce: 50
-  obstacleVisionRadius: 0.2
-  visionRadius: 0.9
+  obstacleVisionRadius: 0.5
+  visionRadius: 2
   visionAngle: 195
   obstacleLayer:
     serializedVersion: 2
-    m_Bits: 192
-  infinite: 0
+    m_Bits: 64
+  infinite: 1
   width: 50
   height: 20
   depth: 20
   separationWeight: 1.5
-  alignmentWeight: 1
-  cohesionWeight: 3
-  obstacleWeight: 100
+  alignmentWeight: 2
+  cohesionWeight: 2
+  obstacleWeight: 80
+  avoidanceWeight: 100
   separation: 1
   alignment: 1
   cohesion: 1
+  avoidance: 1

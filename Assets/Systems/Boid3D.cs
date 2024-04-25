@@ -4,6 +4,20 @@ using UnityEngine;
 
 public class Boid3D : Boid
 {
+    private MeshRenderer _meshRenderer;
+
+    private void Awake()
+    {
+        _meshRenderer = GetComponentInChildren<MeshRenderer>();
+    }
+
+    public override void InitGroup(BoidGroup boidGroup)
+    {
+        base.InitGroup(boidGroup);
+        if (boidGroup)
+            _meshRenderer.material = boidGroup.material;
+    }
+    
     protected override void InitVelocity(float speed)
     {
         if (velocity == Vector3.zero)

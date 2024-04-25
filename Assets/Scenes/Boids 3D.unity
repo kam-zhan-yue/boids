@@ -123,6 +123,56 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &56673176
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 56673178}
+  - component: {fileID: 56673177}
+  m_Layer: 0
+  m_Name: Predator Spawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &56673177
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 56673176}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b20ad4344dac456183640f79762a118, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  threeDimensions: 1
+  startDirection: {x: 1, y: 0, z: 0}
+  boidPrefab: {fileID: 3073763221678719475, guid: 85ec97438694c41218d4dfed12376c3b, type: 3}
+  spawnRadius: 3
+  spawnCount: 20
+  boidGroup: {fileID: 11400000, guid: 9c1916472afdf441a92efa02d7551f54, type: 2}
+--- !u!4 &56673178
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 56673176}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 18.18, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &115802785
 GameObject:
   m_ObjectHideFlags: 0
@@ -135,7 +185,7 @@ GameObject:
   - component: {fileID: 115802789}
   - component: {fileID: 115802788}
   - component: {fileID: 115802787}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: Cube (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -240,7 +290,7 @@ GameObject:
   - component: {fileID: 116197946}
   - component: {fileID: 116197945}
   - component: {fileID: 116197944}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: Cube (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -425,6 +475,56 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 20.097, y: 0, z: 0}
+--- !u!1 &441038548
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 441038550}
+  - component: {fileID: 441038549}
+  m_Layer: 0
+  m_Name: Blue Spawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &441038549
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 441038548}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b20ad4344dac456183640f79762a118, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  threeDimensions: 1
+  startDirection: {x: 0, y: 0, z: 0}
+  boidPrefab: {fileID: 3073763221678719475, guid: 85ec97438694c41218d4dfed12376c3b, type: 3}
+  spawnRadius: 3
+  spawnCount: 50
+  boidGroup: {fileID: 11400000, guid: a60ba9aa908c54f529dfe55c7eb1ab3c, type: 2}
+--- !u!4 &441038550
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 441038548}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 18.55, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &464099652
 GameObject:
   m_ObjectHideFlags: 0
@@ -531,7 +631,7 @@ GameObject:
   - component: {fileID: 782109734}
   - component: {fileID: 782109733}
   - component: {fileID: 782109732}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: Cube (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -636,7 +736,7 @@ GameObject:
   - component: {fileID: 941748804}
   - component: {fileID: 941748803}
   - component: {fileID: 941748802}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -834,6 +934,56 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1897794907}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1292816599
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1292816601}
+  - component: {fileID: 1292816600}
+  m_Layer: 0
+  m_Name: Debug Spawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &1292816600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1292816599}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b20ad4344dac456183640f79762a118, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  threeDimensions: 1
+  startDirection: {x: 0, y: 0, z: 0}
+  boidPrefab: {fileID: 3073763221678719475, guid: 85ec97438694c41218d4dfed12376c3b, type: 3}
+  spawnRadius: 3
+  spawnCount: 10
+  boidGroup: {fileID: 11400000, guid: 893a010b6ea0a4e45bb9f240b016413e, type: 2}
+--- !u!4 &1292816601
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1292816599}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1509819260
 GameObject:
   m_ObjectHideFlags: 0
@@ -846,7 +996,7 @@ GameObject:
   - component: {fileID: 1509819264}
   - component: {fileID: 1509819263}
   - component: {fileID: 1509819262}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: Cube (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -995,7 +1145,7 @@ GameObject:
   - component: {fileID: 1626060715}
   - component: {fileID: 1626060716}
   m_Layer: 0
-  m_Name: BoidSpawner
+  m_Name: Red Spawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1029,9 +1179,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   threeDimensions: 1
+  startDirection: {x: 0, y: 0, z: 0}
   boidPrefab: {fileID: 3073763221678719475, guid: 85ec97438694c41218d4dfed12376c3b, type: 3}
   spawnRadius: 3
-  spawnCount: 200
+  spawnCount: 50
+  boidGroup: {fileID: 11400000, guid: 893a010b6ea0a4e45bb9f240b016413e, type: 2}
 --- !u!1 &1693842220
 GameObject:
   m_ObjectHideFlags: 0
@@ -1041,7 +1193,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1693842221}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: Walls
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1081,7 +1233,7 @@ GameObject:
   - component: {fileID: 1702471486}
   - component: {fileID: 1702471485}
   - component: {fileID: 1702471484}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: Cube (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1424,7 +1576,10 @@ SceneRoots:
   m_Roots:
   - {fileID: 237048096}
   - {fileID: 464099654}
+  - {fileID: 1292816601}
   - {fileID: 1626060715}
+  - {fileID: 441038550}
+  - {fileID: 56673178}
   - {fileID: 1622345620}
   - {fileID: 1693842221}
   - {fileID: 1897794907}

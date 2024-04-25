@@ -28,7 +28,7 @@ MonoBehaviour:
   separationWeight: 1.5
   alignmentWeight: 2
   cohesionWeight: 2
-  obstacleWeight: 100
+  obstacleWeight: 80
   avoidanceWeight: 100
   separation: 1
   alignment: 1

@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Predator
   m_EditorClassIdentifier: 
   predator: 1
-  color: {r: 0.8584906, g: 0.4522457, b: 0, a: 1}
-  material: {fileID: 0}
+  color: {r: 0.8566756, g: 0, b: 0.85882354, a: 1}
+  material: {fileID: 2100000, guid: 5fa481d7838b248b8ac94b3a431ad6de, type: 2}
