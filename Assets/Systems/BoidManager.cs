@@ -45,17 +45,20 @@ public class BoidManager : MonoBehaviour
         Vector3 separationForce = Vector3.zero;
         Vector3 alignmentForce = Vector3.zero;
         Vector3 cohesionForce = Vector3.zero;
+        Vector3 avoidanceForce = Vector3.zero;
         for (int i = 0; i < nearbyBoids.Count; ++i)
         {
             if (boid == nearbyBoids[i])
                 continue;
 
-            if (boidSettings.separation)
-                separationForce -= GetSeparationForce(boid, nearbyBoids[i]);
-            if (boidSettings.alignment)
-                alignmentForce += GetAlignmentForce(boid, nearbyBoids[i]);
-            if (boidSettings.cohesion)
-                cohesionForce += GetCohesionForce(boid, nearbyBoids[i]);
+            if (SameGroup(boid, nearbyBoids[i]))
+            {
+                if (boidSettings.separation) separationForce -= GetSeparationForce(boid, nearbyBoids[i]);
+                if (boidSettings.alignment) alignmentForce += GetAlignmentForce(boid, nearbyBoids[i]);
+                if (boidSettings.cohesion) cohesionForce += GetCohesionForce(boid, nearbyBoids[i]);
+            }
+            if (boidSettings.avoidance)
+                avoidanceForce += GetAvoidanceForce(boid, nearbyBoids[i]);
         }
         // Divide the cohesion force by the number of nearby boids
         Vector3 offsetCohesion = Vector3.zero;
@@ -67,6 +70,12 @@ public class BoidManager : MonoBehaviour
         boid.SetSeparation(separationForce);
         boid.SetAlignment(alignmentForce);
         boid.SetCohesion(offsetCohesion);
+        boid.SetAvoidance(avoidanceForce);
+    }
+
+    private bool SameGroup(Boid boid1, Boid boid2)
+    {
+        return boid1.GroupID == boid2.GroupID;
     }
 
     private Vector3 GetSeparationForce(Boid boid1, Boid boid2)
@@ -88,6 +97,16 @@ public class BoidManager : MonoBehaviour
     {
         return boid2.transform.position;
     }
+
+    private Vector3 GetAvoidanceForce(Boid boid1, Boid boid2)
+    {
+        // Ignore if boid2 is not a predator or if boid1 is a predator
+        if (!boid2.Predator || boid1.Predator)
+            return Vector3.zero;
+        // Get direction away from boid2
+        Vector3 difference = boid1.transform.position - boid2.transform.position;
+        return difference.normalized / difference.sqrMagnitude;
+    }
     
     private List<Boid> GetNearbyBoids(Boid boid)
     {
@@ -95,8 +114,6 @@ public class BoidManager : MonoBehaviour
         for (int i = 0; i < _boids.Length; ++i)
         {   
             if (_boids[i] == boid)
-                continue;
-            if(_boids[i].GroupID != boid.GroupID)
                 continue;
             if (boid.CanSee(_boids[i].transform.position))
             {

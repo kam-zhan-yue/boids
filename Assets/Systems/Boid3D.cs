@@ -6,8 +6,15 @@ public class Boid3D : Boid
 {
     protected override void InitVelocity(float speed)
     {
-        Vector3 random = Random.insideUnitSphere;
-        velocity = speed * random.normalized;
+        if (velocity == Vector3.zero)
+        {
+            Vector3 random = Random.insideUnitSphere;
+            velocity = speed * random.normalized;
+        }
+        else
+        {
+            velocity *= speed;
+        }
     }
 
     protected override void UpdateTransform()

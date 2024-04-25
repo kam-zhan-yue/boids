@@ -1,12 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class BoidSpawner : MonoBehaviour
 {
     [SerializeField] private bool threeDimensions = false;
+    [SerializeField] private Vector3 startDirection = Vector3.zero;
     [SerializeField] private Boid boidPrefab;
     [SerializeField] private float spawnRadius = 1;
     [SerializeField] private float spawnCount = 1;
@@ -27,6 +29,8 @@ public class BoidSpawner : MonoBehaviour
             }
             Boid boid = Instantiate(boidPrefab);
             boid.InitGroup(boidGroup);
+            if(startDirection != Vector3.zero)
+                boid.InitDirection(startDirection);
             boid.transform.SetPositionAndRotation(randomPoint, Quaternion.identity);
         }
     }

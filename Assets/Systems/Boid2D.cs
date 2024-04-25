@@ -21,8 +21,15 @@ public class Boid2D : Boid
 
     protected override void InitVelocity(float speed)
     {
-        Vector2 random = Random.insideUnitCircle;
-        velocity = speed * random.normalized;
+        if (velocity == Vector3.zero)
+        {
+            Vector2 random = Random.insideUnitCircle;
+            velocity = speed * random.normalized;
+        }
+        else
+        {
+            velocity *= speed;
+        }
     }
 
     protected override void UpdateTransform()

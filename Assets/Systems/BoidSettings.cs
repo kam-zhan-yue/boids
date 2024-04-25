@@ -25,8 +25,10 @@ public class BoidSettings : ScriptableObject
     [Range(0f, 20f)] public float alignmentWeight = 1f;
     [Range(0f, 20f)] public float cohesionWeight = 1f;
     [Range(0f, 100f)] public float obstacleWeight = 3f;
+    [Range(0f, 100f)] public float avoidanceWeight= 3f;
 
     public bool separation = true;
     public bool alignment = true;
     public bool cohesion = true;
+    public bool avoidance = true;
 }

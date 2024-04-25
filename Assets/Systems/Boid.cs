@@ -10,22 +10,33 @@ public abstract class Boid : MonoBehaviour
     private Vector3 _alignmentForce = Vector3.zero;
     private Vector3 _cohesionForce = Vector3.zero;
     private Vector3 _obstacleForce = Vector3.zero;
+    private Vector3 _avoidanceForce = Vector3.zero;
     private List<Boid> _boidsInVision = new List<Boid>();
     private int _perceivedBoids;
+    private int _groupID;
+    private bool _predator;
     public Vector3 Direction => velocity.normalized;
     public int GroupID => _groupID;
-    private int _groupID;
+    public bool Predator => _predator;
 
     public virtual void InitGroup(BoidGroup boidGroup)
     {
-        if(boidGroup)
+        if (boidGroup)
+        {
+            _predator = boidGroup.predator;
             _groupID = boidGroup.name.GetHashCode();
+        }
     }
 
     public void Init(BoidSettings boidSettings)
     {
         settings = boidSettings;
         InitVelocity((settings.minSpeed + settings.maxSpeed) * 0.5f);
+    }
+
+    public void InitDirection(Vector3 startDirection)
+    {
+        velocity = startDirection.normalized;
     }
 
     protected abstract void InitVelocity(float speed);
@@ -43,9 +54,11 @@ public abstract class Boid : MonoBehaviour
         Vector3 separationForce = SteerTowards(_separationForce);
         Vector3 alignmentForce = SteerTowards(_alignmentForce);
         Vector3 cohesionForce = SteerTowards(_cohesionForce);
+        Vector3 avoidanceForce = SteerTowards(_avoidanceForce);
         acceleration += separationForce * settings.separationWeight;
         acceleration += alignmentForce * settings.alignmentWeight;
         acceleration += cohesionForce * settings.cohesionWeight;
+        acceleration += avoidanceForce * settings.avoidanceWeight;
 
         // Apply obstacle avoidance
         _obstacleForce = SteerTowards(GetObstacleForce());
@@ -89,6 +102,11 @@ public abstract class Boid : MonoBehaviour
     public void SetCohesion(Vector2 separation)
     {
         _cohesionForce = separation;
+    }
+
+    public void SetAvoidance(Vector3 avoidance)
+    {
+        _avoidanceForce = avoidance;
     }
     
     private Vector3 SteerTowards(Vector3 vector)
