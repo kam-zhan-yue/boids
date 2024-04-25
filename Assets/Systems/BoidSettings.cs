@@ -16,6 +16,7 @@ public class BoidSettings : ScriptableObject
     public LayerMask obstacleLayer;
 
     [Header("Scene Settings")] 
+    public bool gpu = false;
     public bool infinite = false;
     public float width;
     public float height;

@@ -5,7 +5,9 @@ using UnityEngine;
 public class BoidManager : MonoBehaviour
 {
     [SerializeField] private BoidSettings boidSettings;
+    [SerializeField] private ComputeShader boidComputeShader;
     private Boid[] _boids = Array.Empty<Boid>();
+    private BoidData[] _boidData = Array.Empty<BoidData>();
     
     private void Start()
     {
@@ -17,6 +19,53 @@ public class BoidManager : MonoBehaviour
     }
 
     private void Update()
+    {
+        if (boidSettings.gpu)
+            SimulateBoidGPU();
+        else
+            SimulateBoidCPU();
+    }
+
+    private void SimulateBoidGPU()
+    {
+        // Assign boids into boid data, getting ready for compute shader
+        _boidData = new BoidData[_boids.Length];
+        for (int i = 0; i < _boids.Length; ++i)
+        {
+            BoidData boidData = new BoidData
+            {
+                position = _boids[i].transform.position,
+                direction = _boids[i].Direction,
+                predator = _boids[i].Predator ? (byte)1 : (byte)0,
+                groupId = _boids[i].GroupID
+            };
+            _boidData[i] = boidData;
+        }
+        
+        // Create a compute buffer for the boid data
+        ComputeBuffer boidsBuffer = new ComputeBuffer(_boidData.Length, BoidData.GetStrideLength());
+        // Set the compute shader variables
+        boidComputeShader.SetBuffer(0, "boids", boidsBuffer);
+        boidComputeShader.SetFloat("visionRadius", boidSettings.visionRadius);
+        boidComputeShader.SetFloat("visionAngle", boidSettings.visionAngle);
+        boidComputeShader.SetInt("boidNum", _boidData.Length);
+        // Dispatch the compute shader
+        boidComputeShader.Dispatch(0, _boidData.Length / 100, 1, 1);
+        
+        // Retrieve the data from the compute shader
+        boidsBuffer.GetData(_boidData);
+        
+        // Loop through the boid data and set the boid variables
+        for (int i = 0; i < _boids.Length; ++i)
+        {
+            _boids[i].SetSeparation(_boidData[i].separationForce);
+            _boids[i].SetAlignment(_boidData[i].alignmentForce);
+            _boids[i].SetCohesion(_boidData[i].cohesionForce);
+            _boids[i].SetAvoidance(_boidData[i].avoidanceForce);
+        }
+    }
+
+    private void SimulateBoidCPU()
     {
         for (int i = 0; i < _boids.Length; ++i)
         {

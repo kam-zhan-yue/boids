@@ -488,11 +488,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2bdc976bb93d49e79225506f6f73054, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  computeShader: {fileID: 0}
+  computeShader: {fileID: 7200000, guid: b344fafca87494c309800c0ed26d113c, type: 3}
   mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
   material: {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   count: 50
-  repetitions: 1
+  repetitions: 1000
 --- !u!4 &968224346
 Transform:
   m_ObjectHideFlags: 0

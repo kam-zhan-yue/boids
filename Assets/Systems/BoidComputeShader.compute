@@ -1,0 +1,57 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+RWTexture2D<float4> Result;
+
+struct Boid
+{
+    float3 position;
+    float3 direction;
+    float3 separationForce;
+    float3 alignmentForce;
+    float3 cohesionForce;
+    float3 avoidanceForce;
+    int groupId;
+    uint predator;
+};
+
+RWStructuredBuffer<Boid> boids;
+float visionRadius;
+float visionAngle;
+int boidNum;
+
+// Simple check to see if the boids are within distance of each other
+// TODO: need to extend this to allow for vision angle
+bool canSee(Boid boid1, Boid boid2)
+{
+    float3 difference = boid2.position - boid1.position;
+    float sqrDistance = difference.x * difference.x + difference.y * difference.y + difference.z * difference.z;
+    return sqrDistance / visionRadius * visionRadius;
+}
+
+float3 getSeparationForce(Boid boid1, Boid boid2)
+{
+    float3 difference = boid2.position - boid1.position;
+    float sqrDistance = difference.x * difference.x + difference.y * difference.y + difference.z * difference.z;
+    return difference / sqrDistance;
+}
+
+[numthreads(100,1,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    // For each boid, loop through every single other boid in the array
+    Boid boid1 = boids[id.x]; // the current boid
+    for(int i=0; i<boidNum; ++i)
+    {
+        // If both indexes are the same, then continue (they are the same boid)
+        if(id.x == i)
+            continue;
+        Boid boid2 = boids[i];    // the boid to check
+        if(canSee(boid1, boid2))
+        {
+            boid1.separationForce = getSeparationForce(boid1, boid2);
+        }
+    }
+}
