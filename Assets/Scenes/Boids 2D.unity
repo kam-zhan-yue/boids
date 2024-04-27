@@ -682,7 +682,7 @@ MonoBehaviour:
   startDirection: {x: 0, y: 1, z: 0}
   boidPrefab: {fileID: 4245311644579194181, guid: 2457481d2a6df498d81bb26631f2a49d, type: 3}
   spawnRadius: 1
-  spawnCount: 1
+  spawnCount: 3
   boidGroup: {fileID: 11400000, guid: a60ba9aa908c54f529dfe55c7eb1ab3c, type: 2}
 --- !u!4 &918632547
 Transform:
@@ -1535,7 +1535,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b167c8ffc599949c8aa29129d62ff55d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boidSettings: {fileID: 11400000, guid: e09a6ff8e5b9a49968ba3f2a09c78f43, type: 2}
+  boidSettings: {fileID: 11400000, guid: e53dd7f1c5ccc4a70b361103e1dbede1, type: 2}
   boidComputeShader: {fileID: 7200000, guid: 0971547b9971945c99f8f089d66b6c58, type: 3}
 --- !u!1 &2030407616
 GameObject:
@@ -1552,7 +1552,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2030407617
 Transform:
   m_ObjectHideFlags: 0

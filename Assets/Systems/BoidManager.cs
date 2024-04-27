@@ -7,7 +7,6 @@ public class BoidManager : MonoBehaviour
     [SerializeField] private BoidSettings boidSettings;
     [SerializeField] private ComputeShader boidComputeShader;
     private Boid[] _boids = Array.Empty<Boid>();
-    private BoidData[] _boidData = Array.Empty<BoidData>();
     
     private void Start()
     {
@@ -29,43 +28,50 @@ public class BoidManager : MonoBehaviour
     private void SimulateBoidGPU()
     {
         // Assign boids into boid data, getting ready for compute shader
-        _boidData = new BoidData[_boids.Length];
+        BoidData[] boidData = new BoidData[_boids.Length];
         for (int i = 0; i < _boids.Length; ++i)
         {
-            BoidData boidData = new()
-            {
-                position = _boids[i].transform.position,
-                direction = _boids[i].Direction,
-                predator = _boids[i].Predator ? (uint)1:0,
-                groupId = _boids[i].GroupID
-            };
-            _boidData[i] = boidData;
+            boidData[i].position = _boids[i].transform.position;
+            boidData[i].direction = _boids[i].Direction;
+            boidData[i].predator = _boids[i].Predator ? (uint)1 : 0;
+            boidData[i].groupId = _boids[i].GroupID;
         }
         
         // Create a compute buffer for the boid data
-        ComputeBuffer boidsBuffer = new ComputeBuffer(_boidData.Length, BoidData.GetStrideLength());
+        ComputeBuffer boidsBuffer = new ComputeBuffer(boidData.Length, BoidData.GetStrideLength());
+        boidsBuffer.SetData(boidData);
+        
         // Set the compute shader variables
         boidComputeShader.SetBuffer(0, "boids", boidsBuffer);
         boidComputeShader.SetFloat("visionRadius", boidSettings.visionRadius);
         boidComputeShader.SetFloat("visionAngle", boidSettings.visionAngle);
-        boidComputeShader.SetInt("boidNum", _boidData.Length);
+        boidComputeShader.SetInt("boidNum", boidData.Length);
         // Dispatch the compute shader
-        boidComputeShader.Dispatch(0, _boidData.Length / 100, 1, 1);
+        boidComputeShader.Dispatch(0, boidData.Length, 1, 1);
         
         // Retrieve the data from the compute shader
-        boidsBuffer.GetData(_boidData);
+        boidsBuffer.GetData(boidData);
         
         // Loop through the boid data and set the boid variables
         for (int i = 0; i < _boids.Length; ++i)
         {
-            _boids[i].SetSeparation(_boidData[i].separationForce);
-            _boids[i].SetAlignment(_boidData[i].alignmentForce);
-            _boids[i].SetCohesion(_boidData[i].cohesionForce);
-            _boids[i].SetAvoidance(_boidData[i].avoidanceForce);
+            _boids[i].SetSeparation(boidData[i].separationForce);
+            _boids[i].SetAlignment(boidData[i].alignmentForce);
+            _boids[i].SetCohesion(boidData[i].cohesionForce);
+            _boids[i].SetAvoidance(boidData[i].avoidanceForce);
             _boids[i].Simulate();
             if (boidSettings.infinite)
                 Bound(_boids[i]);
         }
+        
+        boidsBuffer.Release();
+    }
+
+    private Vector3 ReadjustCohesion(Vector3 totalCohesionForce, Vector3 originalPosition, int nearbyBoids)
+    {
+        if (!boidSettings.cohesion) return Vector3.zero;
+        // Divide the cohesion force by the number of nearby boids
+        return totalCohesionForce / nearbyBoids - originalPosition;
     }
 
     private void SimulateBoidCPU()
@@ -94,7 +100,7 @@ public class BoidManager : MonoBehaviour
         
         Vector3 separationForce = Vector3.zero;
         Vector3 alignmentForce = Vector3.zero;
-        Vector3 cohesionForce = Vector3.zero;
+        Vector3 totalCohesionForce = Vector3.zero;
         Vector3 avoidanceForce = Vector3.zero;
         for (int i = 0; i < nearbyBoids.Count; ++i)
         {
@@ -105,21 +111,16 @@ public class BoidManager : MonoBehaviour
             {
                 if (boidSettings.separation) separationForce -= GetSeparationForce(boid, nearbyBoids[i]);
                 if (boidSettings.alignment) alignmentForce += GetAlignmentForce(boid, nearbyBoids[i]);
-                if (boidSettings.cohesion) cohesionForce += GetCohesionForce(boid, nearbyBoids[i]);
+                if (boidSettings.cohesion) totalCohesionForce += GetCohesionForce(boid, nearbyBoids[i]);
             }
             if (boidSettings.avoidance)
                 avoidanceForce += GetAvoidanceForce(boid, nearbyBoids[i]);
         }
-        // Divide the cohesion force by the number of nearby boids
-        Vector3 offsetCohesion = Vector3.zero;
-        if (boidSettings.cohesion)
-        {
-            cohesionForce /= nearbyBoids.Count;
-            offsetCohesion = cohesionForce - boid.transform.position;
-        }
+
+        Vector3 cohesionForce = ReadjustCohesion(totalCohesionForce, boid.transform.position, nearbyBoids.Count);
         boid.SetSeparation(separationForce);
         boid.SetAlignment(alignmentForce);
-        boid.SetCohesion(offsetCohesion);
+        boid.SetCohesion(cohesionForce);
         boid.SetAvoidance(avoidanceForce);
     }
 
@@ -132,10 +133,6 @@ public class BoidManager : MonoBehaviour
     {
         Vector3 difference = boid2.transform.position - boid1.transform.position;
         return difference.normalized / difference.sqrMagnitude;
-        return BoidExtensions.GetAttractiveForce(
-            boid1.transform.position, 
-            boid2.transform.position, 
-            boidSettings.visionRadius);
     }
 
     private Vector3 GetAlignmentForce(Boid boid1, Boid boid2)

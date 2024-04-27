@@ -13,14 +13,6 @@ public struct BoidData
 
     public static int GetStrideLength()
     {
-        int positionSize = sizeof(float) * 3;
-        int directionSize = sizeof(float) * 3;
-        int separationSize = sizeof(float) * 3;
-        int alignmentSize = sizeof(float) * 3;
-        int cohesionSize = sizeof(float) * 3;
-        int avoidanceSize = sizeof(float) * 3;
-        int groupSize = sizeof(int);
-        int predatorSize = sizeof(uint);
-        return positionSize + directionSize + separationSize + alignmentSize + cohesionSize + avoidanceSize + groupSize + predatorSize;
+        return sizeof (float) * 3 * 6 + sizeof (int) + sizeof(uint);
     }
 }

@@ -28,30 +28,36 @@ bool canSee(Boid boid1, Boid boid2)
 {
     float3 difference = boid2.position - boid1.position;
     float sqrDistance = difference.x * difference.x + difference.y * difference.y + difference.z * difference.z;
-    return sqrDistance / visionRadius * visionRadius;
-}
-
-float3 getSeparationForce(Boid boid1, Boid boid2)
-{
-    float3 difference = boid2.position - boid1.position;
-    float sqrDistance = difference.x * difference.x + difference.y * difference.y + difference.z * difference.z;
-    return difference / sqrDistance;
+    return sqrDistance < visionRadius * visionRadius;
 }
 
 [numthreads(100,1,1)]
 void CSMain (uint3 id : SV_DispatchThreadID)
 {
+    float3 totalCohesionForce;
     // For each boid, loop through every single other boid in the array
-    Boid boid1 = boids[id.x]; // the current boid
-    for(int i=0; i<boidNum; ++i)
+    for (int i = 0; i < boidNum; i ++)
     {
         // If both indexes are the same, then continue (they are the same boid)
-        if(id.x == i)
-            continue;
-        Boid boid2 = boids[i];    // the boid to check
-        if(canSee(boid1, boid2))
+        if (id.x == i) continue;
+        
+        const Boid boid2 = boids[i];
+        // Continue if the boid is not perceivable
+        if(!canSee(boids[id.x], boid2)) continue;;
+        
+
+        float3 offset = boid2.position - boids[id.x].position;
+        const float sqrDst = offset.x * offset.x + offset.y * offset.y + offset.z * offset.z;
+
+        // Only simulate separation, alignment, and cohesion if in the same group
+        if(boids[id.x].groupId == boid2.groupId)
         {
-            boid1.separationForce = getSeparationForce(boid1, boid2);
+            boids[id.x].separationForce -= offset / sqrDst;
+            boids[id.x].alignmentForce += boid2.direction;
+            totalCohesionForce += boid2.position;
         }
     }
+
+    // Readjust the cohesion force
+    boids[id.x].cohesionForce = totalCohesionForce / boidNum - boids[id.x].position;
 }
