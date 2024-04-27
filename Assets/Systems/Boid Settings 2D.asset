@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 60ee3900e8f3842318959c1ad031cfb1, type: 3}
-  m_Name: Boid Settings 2D - GPU
+  m_Name: Boid Settings 2D
   m_EditorClassIdentifier: 
   minSpeed: 7
   maxSpeed: 10
@@ -21,7 +21,7 @@ MonoBehaviour:
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 64
-  gpu: 1
+  gpu: 0
   infinite: 1
   width: 50
   height: 30
@@ -29,8 +29,8 @@ MonoBehaviour:
   separationWeight: 2
   alignmentWeight: 3
   cohesionWeight: 3
-  obstacleWeight: 0
-  avoidanceWeight: 45.5
+  obstacleWeight: 80
+  avoidanceWeight: 100
   separation: 1
   alignment: 1
   cohesion: 1
