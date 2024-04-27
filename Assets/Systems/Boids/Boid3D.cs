@@ -36,13 +36,6 @@ public class Boid3D : Boid
         transform.forward = velocity.normalized;
     }
 
-    public override bool CanSee(Vector3 position)
-    {
-        // Just away if they are close by (no vision angle, just sphere)
-        Vector3 difference = position - transform.position;
-        return difference.magnitude <= settings.visionRadius;
-    }
-
     protected override Vector3 GetObstacleForce()
     {
         if (HasCollision())

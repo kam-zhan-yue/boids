@@ -21,6 +21,7 @@ MonoBehaviour:
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 192
+  gpu: 1
   infinite: 0
   width: 50
   height: 20

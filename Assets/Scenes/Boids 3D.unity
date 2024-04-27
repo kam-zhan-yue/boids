@@ -964,10 +964,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   threeDimensions: 1
-  startDirection: {x: 0, y: 0, z: 0}
+  startDirection: {x: 0, y: 1, z: 0}
   boidPrefab: {fileID: 3073763221678719475, guid: 85ec97438694c41218d4dfed12376c3b, type: 3}
   spawnRadius: 3
-  spawnCount: 10
+  spawnCount: 2
   boidGroup: {fileID: 11400000, guid: 893a010b6ea0a4e45bb9f240b016413e, type: 2}
 --- !u!4 &1292816601
 Transform:
@@ -978,7 +978,7 @@ Transform:
   m_GameObject: {fileID: 1292816599}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 9.85, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1119,6 +1119,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boidSettings: {fileID: 11400000, guid: 2117a404dbdc049b1b2d3c8d3b62cd8a, type: 2}
+  boidComputeShader: {fileID: 7200000, guid: 0971547b9971945c99f8f089d66b6c58, type: 3}
 --- !u!4 &1622345620
 Transform:
   m_ObjectHideFlags: 0

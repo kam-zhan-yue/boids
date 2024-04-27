@@ -71,7 +71,20 @@ public abstract class Boid : MonoBehaviour
 
     protected abstract void UpdateTransform();
 
-    public abstract bool CanSee(Vector3 position);
+    public bool CanSee(Vector3 position)
+    {
+        // Get the vectors from the transforms
+        Vector3 vector1 = Direction;
+        Vector3 vector2 = position - transform.position;
+        // If point is far away, not valid
+        if (vector2.magnitude > settings.visionRadius)
+            return false;
+
+        // Calculate the angle between the vectors
+        float directionAngle = Vector3.Angle(transform.position, vector1);
+        float angle = Vector3.Angle(vector1, vector2);
+        return angle <= settings.visionAngle * 0.5f;
+    }
 
     protected abstract Vector3 GetObstacleForce();
     

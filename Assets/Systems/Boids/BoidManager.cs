@@ -162,7 +162,9 @@ public class BoidManager : MonoBehaviour
         {   
             if (_boids[i] == boid)
                 continue;
-            if (boid.CanSee(_boids[i].transform.position))
+            bool canSee = boid.CanSee(_boids[i].transform.position);
+            Debug.Log($"Can See: {canSee}");
+            if (canSee)
             {
                 // Add separation force
                 nearby.Add(_boids[i]);
