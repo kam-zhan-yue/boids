@@ -79,8 +79,6 @@ public class BoidManager : MonoBehaviour
         for (int i = 0; i < _boids.Length; ++i)
         {
             SimulateBoid(_boids[i]);
-            if(boidSettings.infinite) 
-                Bound(_boids[i]);
         }
     }
 
@@ -92,6 +90,9 @@ public class BoidManager : MonoBehaviour
         SimulateForces(boid, nearbyBoids);
         // Simulate the boid
         boid.Simulate();
+        // Bound the boid
+        if(boidSettings.infinite) 
+            Bound(boid);
     }
 
     private void SimulateForces(Boid boid, List<Boid> nearbyBoids)
@@ -110,11 +111,11 @@ public class BoidManager : MonoBehaviour
             if (SameGroup(boid, nearbyBoids[i]))
             {
                 if (boidSettings.separation) separationForce -= GetSeparationForce(boid, nearbyBoids[i]);
-                if (boidSettings.alignment) alignmentForce += GetAlignmentForce(boid, nearbyBoids[i]);
-                if (boidSettings.cohesion) totalCohesionForce += GetCohesionForce(boid, nearbyBoids[i]);
+                if (boidSettings.alignment) alignmentForce += GetAlignmentForce(nearbyBoids[i]);
+                if (boidSettings.cohesion) totalCohesionForce += GetCohesionForce(nearbyBoids[i]);
             }
             if (boidSettings.avoidance)
-                avoidanceForce += GetAvoidanceForce(boid, nearbyBoids[i]);
+                avoidanceForce -= GetAvoidanceForce(boid, nearbyBoids[i]);
         }
 
         Vector3 cohesionForce = ReadjustCohesion(totalCohesionForce, boid.transform.position, nearbyBoids.Count);
@@ -135,12 +136,12 @@ public class BoidManager : MonoBehaviour
         return difference.normalized / difference.sqrMagnitude;
     }
 
-    private Vector3 GetAlignmentForce(Boid boid1, Boid boid2)
+    private Vector3 GetAlignmentForce(Boid boid2)
     {
         return boid2.Direction;
     }
 
-    private Vector3 GetCohesionForce(Boid boid1, Boid boid2)
+    private Vector3 GetCohesionForce(Boid boid2)
     {
         return boid2.transform.position;
     }
@@ -151,8 +152,7 @@ public class BoidManager : MonoBehaviour
         if (!boid2.Predator || boid1.Predator)
             return Vector3.zero;
         // Get direction away from boid2
-        Vector3 difference = boid1.transform.position - boid2.transform.position;
-        return difference.normalized / difference.sqrMagnitude;
+        return GetSeparationForce(boid1, boid2);
     }
     
     private List<Boid> GetNearbyBoids(Boid boid)
@@ -162,9 +162,8 @@ public class BoidManager : MonoBehaviour
         {   
             if (_boids[i] == boid)
                 continue;
-            bool canSee = boid.CanSee(_boids[i].transform.position);
-            Debug.Log($"Can See: {canSee}");
-            if (canSee)
+            // Check whether the other boid can be seen
+            if (boid.CanSee(_boids[i].transform.position))
             {
                 // Add separation force
                 nearby.Add(_boids[i]);

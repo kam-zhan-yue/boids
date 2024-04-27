@@ -22,13 +22,23 @@ float visionRadius;
 float visionAngle;
 int boidNum;
 
-// Simple check to see if the boids are within distance of each other
-// TODO: need to extend this to allow for vision angle
-bool canSee(Boid boid1, Boid boid2)
+bool CanSee(Boid boid1, Boid boid2)
 {
-    float3 difference = boid2.position - boid1.position;
-    float sqrDistance = difference.x * difference.x + difference.y * difference.y + difference.z * difference.z;
-    return sqrDistance < visionRadius * visionRadius;
+    // Calculate the direction and difference vectors
+    const float3 direction = boid1.direction;
+    const float3 difference = boid2.position - boid1.position;
+
+    // Check whether the distance is valid
+    const float sqrDst = difference.x * difference.x + difference.y * difference.y + difference.z * difference.z;
+    if(sqrDst > visionRadius * visionRadius)
+        return false;
+    
+    // Calculate the dot product to get the cosine of the angle between vectors
+    const float cosAngle = dot(direction, difference);
+    // Calculate the angle between the vectors in degrees
+    const float angle = acos(cosAngle) * (180.0 / 3.14159265359); // Convert radians to degrees
+    // Check if the angle is within the vision angle
+    return angle <= visionAngle * 0.5;
 }
 
 [numthreads(1,1,1)]
@@ -42,6 +52,8 @@ void CSMain (uint3 id : SV_DispatchThreadID)
         return;
     
     float3 totalCohesionForce;
+    int nearbyBoids = 0;
+    
     // For each boid, loop through every single other boid in the array
     for (int i = 0; i < boidNum; i ++)
     {
@@ -50,9 +62,10 @@ void CSMain (uint3 id : SV_DispatchThreadID)
         
         const Boid boid2 = boids[i];
         // Continue if the boid is not perceivable
-        if(!canSee(boids[id.x], boid2)) continue;;
-        
+        if(!CanSee(boids[id.x], boid2)) continue;
 
+        nearbyBoids++;
+        // Calculate the offset and square distance
         float3 offset = boid2.position - boids[id.x].position;
         const float sqrDst = offset.x * offset.x + offset.y * offset.y + offset.z * offset.z;
 
@@ -72,5 +85,6 @@ void CSMain (uint3 id : SV_DispatchThreadID)
     }
 
     // Readjust the cohesion force
-    boids[id.x].cohesionForce = totalCohesionForce / boidNum - boids[id.x].position;
+    if(nearbyBoids > 0)
+        boids[id.x].cohesionForce = totalCohesionForce / nearbyBoids - boids[id.x].position;
 }
