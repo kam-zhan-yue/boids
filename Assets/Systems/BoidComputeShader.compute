@@ -31,9 +31,16 @@ bool canSee(Boid boid1, Boid boid2)
     return sqrDistance < visionRadius * visionRadius;
 }
 
-[numthreads(100,1,1)]
+[numthreads(1,1,1)]
 void CSMain (uint3 id : SV_DispatchThreadID)
 {
+    // From https://forum.unity.com/threads/graphical-glitches-with-compute-shaders.1059680/
+    // If the amount of data we are processing isn't an exact multiple of the number of threads,
+    // we need to abort the execution on the excess threads.
+    // Hence, make sure we are not executing on excess threads (safety measure)
+    if (id.x >= boidNum)
+        return;
+    
     float3 totalCohesionForce;
     // For each boid, loop through every single other boid in the array
     for (int i = 0; i < boidNum; i ++)
@@ -55,6 +62,12 @@ void CSMain (uint3 id : SV_DispatchThreadID)
             boids[id.x].separationForce -= offset / sqrDst;
             boids[id.x].alignmentForce += boid2.direction;
             totalCohesionForce += boid2.position;
+        }
+
+        // Simulate avoidance force if predator relationship is valid
+        if(!boids[id.x].predator && boid2.predator)
+        {
+            boids[id.x].avoidanceForce -= offset/sqrDst;
         }
     }
 

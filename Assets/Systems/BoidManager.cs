@@ -55,10 +55,10 @@ public class BoidManager : MonoBehaviour
         // Loop through the boid data and set the boid variables
         for (int i = 0; i < _boids.Length; ++i)
         {
-            _boids[i].SetSeparation(boidData[i].separationForce);
-            _boids[i].SetAlignment(boidData[i].alignmentForce);
-            _boids[i].SetCohesion(boidData[i].cohesionForce);
-            _boids[i].SetAvoidance(boidData[i].avoidanceForce);
+            if(boidSettings.separation) _boids[i].SetSeparation(boidData[i].separationForce);
+            if(boidSettings.alignment) _boids[i].SetAlignment(boidData[i].alignmentForce);
+            if(boidSettings.cohesion) _boids[i].SetCohesion(boidData[i].cohesionForce);
+            if(boidSettings.avoidance) _boids[i].SetAvoidance(boidData[i].avoidanceForce);
             _boids[i].Simulate();
             if (boidSettings.infinite)
                 Bound(_boids[i]);
